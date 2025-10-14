@@ -1,31 +1,50 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "../App.css";
 
-import { Link } from "react-router-dom";
-import "../App.css"; // ensures consistent styles
+const moods = [
+  { mood: "Happy", query: "Comedy", color: "#FFD93D" },
+  { mood: "Sad", query: "Drama", color: "#6C63FF" },
+  { mood: "Excited", query: "Action", color: "#FF6B6B" },
+  { mood: "Romantic", query: "Romance", color: "#FF4081" },
+  { mood: "Curious", query: "Sci-Fi", color: "#29B6F6" },
+];
 
-function LandingPage() {
+export default function LandingPage() {
+  const [selectedMood, setSelectedMood] = useState("");
+  const navigate = useNavigate();
+
+  const handleMoodSelect = (query) => {
+    setSelectedMood(query);
+    navigate(`/home?mood=${query}`);
+  };
+
   return (
-    <section className="landing">
-      <div className="landing-overlay">
-        <div className="landing-content">
-          <h1 className="landing-title">
-            Welcome to <span>CineSearch</span>
-          </h1>
-          <p className="landing-tagline">
-            Discover, explore, and dive into the universe of your favorite movies.
-          </p>
+    <div className="landing-container">
+      <h1 className="landing-title">Welcome to CineVerse 🎬</h1>
+      <p className="landing-subtitle">
+        Feeling something today? Let’s match your mood with the perfect movie.
+      </p>
 
-          <div className="landing-buttons">
-            <Link to="/home" className="btn explore-btn">
-              🎬 Explore Movies
-            </Link>
-            <Link to="/login" className="btn login-btn">
-              🔑 Login
-            </Link>
-          </div>
+      <div className="mood-section">
+        <h2 className="mood-title">What’s your vibe?</h2>
+        <div className="mood-grid">
+          {moods.map((m, index) => (
+            <button
+              key={index}
+              className={`mood-btn ${selectedMood === m.query ? "active" : ""}`}
+              style={{ backgroundColor: selectedMood === m.query ? m.color : "#1a1a1a" }}
+              onClick={() => handleMoodSelect(m.query)}
+            >
+              {m.mood}
+            </button>
+          ))}
         </div>
       </div>
-    </section>
+
+      <footer className="landing-footer">
+        <p>© 2025 CineVerse | Movies tailored to your mood</p>
+      </footer>
+    </div>
   );
 }
-
-export default LandingPage;

@@ -1,66 +1,43 @@
-
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { fetchMovies } from "../API/keys";
 import MovieCard from "../components/MovieCard";
 import SearchBar from "../components/SearchBar";
 
-function Home() {
+export default function Home() {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const mood = params.get("mood");
+
   const [movies, setMovies] = useState([]);
-  const [error, setError] = useState("");
-
-  const popularQueries = ["Avengers", "Batman", "Spiderman", "Inception", "Harry Potter", "Matrix", "Jurassic Park"];
-
-  const handleSearch = async (query) => {
-    setError("");
-    let allMovies = [];
-
-    try {
-      // Fetch multiple pages for variety
-      for (let page = 1; page <= 2; page++) {
-        const data = await fetchMovies(`${query}&page=${page}`);
-        if (data.Response === "True") {
-          allMovies = [...allMovies, ...data.Search];
-        }
-      }
-
-      setMovies(allMovies);
-    } catch (err) {
-      console.error(err);
-      setError("Error fetching movies.");
-    }
-  };
+  const [searchTerm, setSearchTerm] = useState(mood || "Popular");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const loadMovies = async () => {
-      let allMovies = [];
-
-      for (const q of popularQueries) {
-        const data = await fetchMovies(q);
-        if (data.Response === "True") {
-          allMovies = [...allMovies, ...data.Search];
-        }
-      }
-
-      setMovies(allMovies);
-    };
-
+    async function loadMovies() {
+      setLoading(true);
+      const data = await fetchMovies(searchTerm);
+      if (data.Response === "True") setMovies(data.Search);
+      else setMovies([]);
+      setLoading(false);
+    }
     loadMovies();
-  }, []);
+  }, [searchTerm]);
 
   return (
-    <div className="home">
-      <SearchBar onSearch={handleSearch} />
-      {error && <p className="error">{error}</p>}
-
-      <div className="movie-list">
-        {movies.length > 0 ? (
-          movies.map((movie) => <MovieCard key={movie.imdbID} movie={movie} />)
-        ) : (
-          !error && <p>Loading movies...</p>
-        )}
-      </div>
+    <div className="home-container">
+      <SearchBar onSearch={setSearchTerm} defaultValue={searchTerm} />
+      {loading ? (
+        <p className="loading">Loading movies...</p>
+      ) : (
+        <div className="movie-grid">
+          {movies.length > 0 ? (
+            movies.map((movie) => <MovieCard key={movie.imdbID} movie={movie} />)
+          ) : (
+            <p className="no-results">No movies found for "{searchTerm}"</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }
-
-export default Home;

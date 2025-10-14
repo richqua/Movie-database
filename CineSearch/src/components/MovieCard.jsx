@@ -1,19 +1,16 @@
 
-import { Link } from "react-router-dom";
-
-function MovieCard({ movie }) {
+export default function MovieCard({ movie }) {
   return (
     <div className="movie-card">
-      <Link to={`/movie/${movie.imdbID}`}>
-        <img
-          src={movie.Poster !== "N/A" ? movie.Poster : "/placeholder.jpg"}
-          alt={movie.Title}
-        />
+      <img
+        src={movie.Poster !== "N/A" ? movie.Poster : "/assets/no-image.jpg"}
+        alt={movie.Title}
+      />
+      <div className="movie-info">
         <h3>{movie.Title}</h3>
-        <p>{movie.Year}</p>
-      </Link>
+        <p className="year">{movie.Year}</p>
+        <p className="review">{movie.Review}</p>
+      </div>
     </div>
   );
 }
-
-export default MovieCard;

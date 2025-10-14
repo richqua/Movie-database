@@ -1,45 +1,63 @@
-// src/components/Header.jsx
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import "../App.css";
+import { Link, useLocation } from "react-router-dom";
 
-function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
+export default function Header() {
+  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
-  const toggleMenu = () => setMenuOpen(!menuOpen);
-  const closeMenu = () => setMenuOpen(false);
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const closeMenu = () => {
+    setIsOpen(false); // Collapse immediately after clicking a link
+  };
 
   return (
-    <header className="navbar">
-      <div className="navbar-container">
-        {/* Brand */}
-        <Link to="/" className="navbar-logo">
+    <header className="header">
+      <div className="header-logo">
+        <Link to="/" onClick={closeMenu}>
           🎬 CineVerse
         </Link>
-
-        {/* Hamburger Icon (Mobile) */}
-        <div className="menu-icon" onClick={toggleMenu}>
-          ☰
-        </div>
-
-        {/* Collapsible Navigation */}
-        <nav className={`nav-links ${menuOpen ? "active" : ""}`}>
-          <Link to="/" onClick={closeMenu}>
-            Landing Page
-          </Link>
-          <Link to="/home" onClick={closeMenu}>
-            Home
-          </Link>
-          <Link to="/logins" onClick={closeMenu}>
-            Logins
-          </Link>
-          <Link to="/userprofile" onClick={closeMenu}>
-            User Profile
-          </Link>
-        </nav>
       </div>
+
+      <button className="nav-toggle" onClick={toggleMenu}>
+        {isOpen ? "✖" : "☰"}
+      </button>
+
+      <nav className={`nav-links ${isOpen ? "active" : ""}`}>
+        <Link
+          to="/"
+          className={location.pathname === "/" ? "active" : ""}
+          onClick={closeMenu}
+        >
+          LandingPage
+        </Link>
+
+        <Link
+          to="/home"
+          className={location.pathname === "/home" ? "active" : ""}
+          onClick={closeMenu}
+        >
+          Home
+        </Link>
+
+        <Link
+          to="/logins"
+          className={location.pathname === "/logins" ? "active" : ""}
+          onClick={closeMenu}
+        >
+          Logins
+        </Link>
+
+        <Link
+          to="/userprofile"
+          className={location.pathname === "/userprofile" ? "active" : ""}
+          onClick={closeMenu}
+        >
+          UserProfile
+        </Link>
+      </nav>
     </header>
   );
 }
-
-export default Header;
