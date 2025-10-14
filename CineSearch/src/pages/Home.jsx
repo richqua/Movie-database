@@ -1,42 +1,63 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { fetchMovies } from "../API/keys";
+import "../App.css";
 import MovieCard from "../components/MovieCard";
-import SearchBar from "../components/SearchBar";
 
 export default function Home() {
   const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const mood = params.get("mood");
-
   const [movies, setMovies] = useState([]);
-  const [searchTerm, setSearchTerm] = useState(mood || "Popular");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // Extract mood from query params
+  const params = new URLSearchParams(location.search);
+  const moodQuery = params.get("mood") || "Action";
 
   useEffect(() => {
-    async function loadMovies() {
+    const loadMovies = async () => {
       setLoading(true);
-      const data = await fetchMovies(searchTerm);
-      if (data.Response === "True") setMovies(data.Search);
-      else setMovies([]);
-      setLoading(false);
-    }
+      let allMovies = [];
+      const yearLimit = new Date().getFullYear() - 5; // last 5 years
+
+      try {
+        // Fetch multiple pages to get more results
+        for (let page = 1; page <= 3; page++) {
+          const data = await fetchMovies(moodQuery, page);
+          if (data.Response === "True" && Array.isArray(data.Search)) {
+            const recentMovies = data.Search.filter((m) => {
+              const year = parseInt(m.Year?.split("–")[0]);
+              return !isNaN(year) && year >= yearLimit;
+            });
+            allMovies = [...allMovies, ...recentMovies];
+          }
+        }
+        setMovies(allMovies);
+      } catch (error) {
+        console.error("Error loading movies:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     loadMovies();
-  }, [searchTerm]);
+  }, [moodQuery]);
 
   return (
     <div className="home-container">
-      <SearchBar onSearch={setSearchTerm} defaultValue={searchTerm} />
+      <h1 className="home-title">
+        {moodQuery} Movies (Recent Releases)
+      </h1>
+
       {loading ? (
         <p className="loading">Loading movies...</p>
-      ) : (
+      ) : movies.length > 0 ? (
         <div className="movie-grid">
-          {movies.length > 0 ? (
-            movies.map((movie) => <MovieCard key={movie.imdbID} movie={movie} />)
-          ) : (
-            <p className="no-results">No movies found for "{searchTerm}"</p>
-          )}
+          {movies.map((movie) => (
+            <MovieCard key={movie.imdbID} movie={movie} />
+          ))}
         </div>
+      ) : (
+        <p className="no-results">No recent movies found for this mood.</p>
       )}
     </div>
   );
