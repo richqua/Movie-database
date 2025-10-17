@@ -17,7 +17,7 @@ export default function Header() {
     <header className="header">
       <div className="header-logo">
         <Link to="/" onClick={closeMenu}>
-          CineSearch
+          CineSearch🎥
         </Link>
       </div>
 
