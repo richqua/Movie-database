@@ -1,7 +1,9 @@
 
-export default function MovieCard({ movie }) {
+import { Link } from "react-router-dom";
+
+function MovieCard({ movie }) {
   return (
-    <div className="movie-card">
+    <Link to={`/watch/${movie.imdbID}`} className="movie-card">
       <img
         src={movie.Poster !== "N/A" ? movie.Poster : "/assets/no-image.jpg"}
         alt={movie.Title}
@@ -11,6 +13,8 @@ export default function MovieCard({ movie }) {
         <p className="year">{movie.Year}</p>
         <p className="review">{movie.Review}</p>
       </div>
-    </div>
+    </Link>
   );
 }
+
+export default MovieCard;

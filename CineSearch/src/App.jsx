@@ -7,6 +7,7 @@ import Logins from "./pages/Logins";
 import MovieDetails from "./pages/MovieDetails";
 import NotFound from "./pages/NotFound";
 import UserProfile from "./pages/UserProfile";
+import Watch from "./pages/Watch";
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="/logins" element={<Logins />} />
         <Route path="/movie/:id" element={<MovieDetails />} />
         <Route path="/userprofile" element={<UserProfile />} />
+        <Route path="/watch/:id" element={<Watch />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
