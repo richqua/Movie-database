@@ -1,13 +1,15 @@
 
 import { Link } from "react-router-dom";
 import "../App.css";
+import background2 from "../assets/images/background2.jpg";
+
 
 function UserProfile() {
   return (
     <div className="user-profile">
       <div className="profile-header">
-        <img
-          src="https://i.pravatar.cc/120"
+        <img 
+          src={background2}
           alt="User Avatar"
           className="profile-pic"
         />

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-export default function Header() {
+function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
@@ -61,3 +61,5 @@ export default function Header() {
     </header>
   );
 }
+
+export default Header;

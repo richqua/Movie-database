@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom"; // ✅ added navigate
 import { fetchMovies } from "../API/keys";
 import "../App.css";
 import MovieCard from "../components/MovieCard";
+import SearchBar from "../components/SearchBar";
 
-export default function Home() {
+function Home() {
   const location = useLocation();
+  const navigate = useNavigate(); // ✅ added for handling searches
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -42,11 +44,21 @@ export default function Home() {
     loadMovies();
   }, [moodQuery]);
 
+  // ✅ Handle search submissions
+  const handleSearch = (searchTerm) => {
+    if (searchTerm.trim()) {
+      navigate(`?mood=${encodeURIComponent(searchTerm)}`);
+    }
+  };
+
   return (
     <div className="home-container">
       <h1 className="home-title">
         {moodQuery} Movies (Recent Releases)
       </h1>
+
+      {/* ✅ Added Search Bar */}
+      <SearchBar onSearch={handleSearch} defaultValue={moodQuery} />
 
       {loading ? (
         <p className="loading">Loading movies...</p>
@@ -62,3 +74,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default Home;

@@ -7,21 +7,27 @@ import Logins from "./pages/Logins";
 import MovieDetails from "./pages/MovieDetails";
 import NotFound from "./pages/NotFound";
 import UserProfile from "./pages/UserProfile";
-import Watch from "./pages/Watch";
+import WatchTime from "./pages/WatchTime";
 
-export default function App() {
+function App() {
   return (
     <Router>
+      
       <Header />
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/logins" element={<Logins />} />
-        <Route path="/movie/:id" element={<MovieDetails />} />
-        <Route path="/userprofile" element={<UserProfile />} />
-        <Route path="/watch/:id" element={<Watch />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+
+      <main className="app-main">
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/logins" element={<Logins />} />
+          <Route path="/movie/:id" element={<MovieDetails />} />
+          <Route path="/userprofile" element={<UserProfile />} />
+          <Route path="/watch/:id" element={<WatchTime />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
     </Router>
   );
 }
+
+export default App;

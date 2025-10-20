@@ -18,7 +18,7 @@ function Logins() {
 
   return (
     <div className="login-container">
-      <h2>Login to CineVerse</h2>
+      <h2>Login to CineSearch</h2>
       {error && <p className="error">{error}</p>}
       <form onSubmit={handleSubmit} className="login-form">
         <input

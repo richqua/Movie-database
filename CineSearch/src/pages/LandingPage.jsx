@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../App.css";
 
-export default function LandingPage() {
+function LandingPage() {
   const [selectedMood, setSelectedMood] = useState("");
   const navigate = useNavigate();
 
@@ -63,3 +63,5 @@ export default function LandingPage() {
     </div>
   );
 }
+
+export default LandingPage;
